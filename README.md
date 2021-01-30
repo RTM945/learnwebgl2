@@ -1,3 +1,3 @@
 # webgl_learning
 
-start to play webgl
+start to play webgl2
