@@ -1,4 +1,4 @@
-# learn webgl2
+# Learn WebGL2
 
 start to play webgl2
 
