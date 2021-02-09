@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebGL2 Hello EBO</title>
+    <meta charset="utf-8">
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../shaders/vertex.js"></script>
+    <script src="../shaders/fragment.js"></script>
+</head>
+
+<body>
+    <canvas id="glcanvas" width="640" height="480"></canvas>
+
+    <script>
+
+        main();
+        
+        function main() {
+            const canvas = document.querySelector('#glcanvas');
+            const gl = webglUtils.initWindow(canvas);
+
+            const program = webglUtils.createProgramFromSources(gl, [vertexShader, fragmentShader]);
+            
+            const aPosAttrLoc = gl.getAttribLocation(program, "aPos");
+
+            // two triangles  
+            // vec4(x, y, z, w = default 1.0)
+            /*specify bottom right and top left twice! 
+            const vertices = [
+                // first
+                0.5, 0.5, 0.0,      // top right   
+                0.5, -0.5, 0.0,     // bottom right
+                -0.5, 0.5, 0.0,     // top left 
+
+                //second
+                0.5, -0.5, 0.0,     // bottom right 
+                -0.5, -0.5, 0.0,    // bottom left 
+                -0.5, 0.5, 0.0      // top left 
+            ];
+            */
+            // only store the unique vertices and 
+            // then specify the order at which we want to draw these vertices in
+            const vertices = [
+                // first
+                0.5, 0.5, 0.0,      // top right   
+                0.5, -0.5, 0.0,     // bottom right
+                -0.5, -0.5, 0.0,    // bottom left 
+                -0.5, 0.5, 0.0      // top left 
+            ];
+
+            const indices = [
+                0, 1, 3, // first triangle
+                1, 2, 3 // second triangle
+            ];
+
+            // create vao
+            const vao = gl.createVertexArray();
+            // create vbo
+            const vbo = gl.createBuffer();
+            // create ebo
+            const ebo = gl.createBuffer();
+
+            // use this vao
+            gl.bindVertexArray(vao);
+            // bind this vbo to this vao
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+            // pass vertices to vbo
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            // similar to the vbo we bind the ebo and copy the indices into the buffer
+            // just like the vbo we want to place those calls between a bind and an unbind call.
+            // It's important to note that unlike the ARRAY_BUFFER binding point which is global state, 
+            // the ELEMENT_ARRAY_BUFFER binding point is part of the current vertex array.
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+
+            gl.vertexAttribPointer(aPosAttrLoc, 3, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(aPosAttrLoc);
+
+            //render
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+            gl.useProgram(program);
+            gl.bindVertexArray(vao);
+
+            const indexType = gl.UNSIGNED_SHORT;
+            const count = 6; // 6 indices
+            gl.drawElements(gl.TRIANGLES, count, indexType, 0);
+        }
+
+        
+    </script>
+    
+</body>
+
+</html>
