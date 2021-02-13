@@ -17,8 +17,7 @@
         main();
         
         function main() {
-            const canvas = document.querySelector('#glcanvas');
-            const gl = webglUtils.initWindow(canvas);
+            const gl = webglUtils.initWindow("glcanvas");
 
             const program = webglUtils.createProgramFromSources(gl, [vertexShader, fragmentShader]);
             
